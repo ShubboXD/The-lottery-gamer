@@ -2,8 +2,6 @@ import random
 import time
 import os
 
-# --- Configuration ---
-# No API key needed anymore!
 HIGHSCORE_FILE = "highscore.txt"
 
 class Item:
