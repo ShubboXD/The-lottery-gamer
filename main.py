@@ -575,7 +575,7 @@ class Game:
 
 def main():
     print("\n" + "="*50)
-    print("🎮 Welcome to BINARY ORACLE 2.2 🎮")
+    print("🎮 Welcome to BINARY ORACLE 1.1 🎮")
     print("="*50)
     print("Everything is 0 or 1. Choose wisely.")
     print("="*50 + "\n")
