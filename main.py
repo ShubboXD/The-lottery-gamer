@@ -17,6 +17,13 @@ class Business:
         self.cost = cost
         self.income = income
         self.description = description
+        self.level = 1
+        self.upgrade_cost = int(cost * 1.5) # Initial upgrade cost
+
+    def upgrade(self):
+        self.level += 1
+        self.income = int(self.income * 1.25) # 25% income increase
+        self.upgrade_cost = int(self.upgrade_cost * 1.8) # Cost scales up
 
 class CommentarySystem:
     def __init__(self):
@@ -221,22 +228,39 @@ class Game:
         print("Owned Businesses:")
         if not self.businesses:
             print(" - None")
-        for b in self.businesses:
-            print(f" - {b.name} (Income: {b.income}/round)")
+        for i, b in enumerate(self.businesses):
+            print(f" {i+1}. {b.name} [Lvl {b.level}] (Income: {b.income}/round) - Upgrade Cost: {b.upgrade_cost}")
             
         print("\nAvailable for Purchase:")
+        # Offset indices for purchase options
+        start_idx = len(self.businesses) + 1
         for i, biz in enumerate(self.available_businesses):
-            print(f"{i+1}. {biz.name} - {biz.cost} coins ({biz.description})")
+            print(f"{start_idx + i}. Buy {biz.name} - {biz.cost} coins ({biz.description})")
         print("0. Exit")
         
-        choice = input("Buy business (number): ").strip()
+        choice = input("Select option (number): ").strip()
         if choice.isdigit():
             idx = int(choice) - 1
-            if 0 <= idx < len(self.available_businesses):
-                biz = self.available_businesses[idx]
+            
+            # Upgrade owned business
+            if 0 <= idx < len(self.businesses):
+                biz = self.businesses[idx]
+                if self.balance >= biz.upgrade_cost:
+                    self.balance -= biz.upgrade_cost
+                    biz.upgrade()
+                    print(f"✅ Upgraded {biz.name} to Level {biz.level}!")
+                else:
+                    print(f"❌ Not enough coins to upgrade {biz.name}.")
+            
+            # Buy new business
+            elif len(self.businesses) <= idx < len(self.businesses) + len(self.available_businesses):
+                buy_idx = idx - len(self.businesses)
+                biz = self.available_businesses[buy_idx]
                 if self.balance >= biz.cost:
                     self.balance -= biz.cost
-                    self.businesses.append(biz)
+                    # Create a new instance so we don't modify the "available" template
+                    new_biz = Business(biz.name, biz.cost, biz.income, biz.description)
+                    self.businesses.append(new_biz)
                     print(f"✅ Acquired {biz.name}!")
                 else:
                     print("❌ Not enough coins.")
@@ -330,7 +354,6 @@ class Game:
             try:
                 prompt = f"\nBalance: {self.balance} | Place your bet (integer amount, 'all', 'half', or 0 to quit): "
                 bet_input = input(prompt).strip().lower()
-                
                 if bet_input == '0':
                     return 0
                 
