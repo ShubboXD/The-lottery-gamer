@@ -1,4 +1,4 @@
-![alt text](image.png) 
+![alt text](image-1.png)
 <br>
 This is a lottery based game, meant to be addictive. Entirely vibe coded. 
 <br>
