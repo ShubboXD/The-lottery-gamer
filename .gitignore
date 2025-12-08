@@ -1,1 +1,5 @@
-/highscore.txt
+*.txt
+*.spec
+.venv
+build
+dist
